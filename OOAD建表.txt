@@ -1,0 +1,95 @@
+ccreate table account
+(
+    id        serial primary key,
+    user_name varchar(32) not null,
+    password  varchar(32) not null
+);
+create table consumer
+(
+    id         serial primary key,
+    account_id integer references account (id),
+    is_admin   boolean,
+    credit     integer
+);
+create table hotel
+(
+    id       serial primary key,
+    location varchar(64),
+    city     varchar(32),
+    phone    varchar(32)
+);
+create table picture
+(
+    id     serial primary key,
+    content bytea
+);
+create table floor_plan
+(
+    hotel_id   integer references hotel (id),
+    picture_id integer references picture (id),
+    floor      integer not null
+);
+create table type
+(
+    id        serial primary key,
+    room_type varchar(32) not null, 
+    price     float       not null
+);
+create table room
+(
+    id          serial primary key,
+    room_number varchar(8),
+    floor       integer,
+    type_id     integer references type (id),
+    hotel_id    integer references hotel (id),
+    picture_id    integer references picture (id),
+    plan_x      integer,
+    plan_y      integer
+);
+create table ordering
+(
+    id             serial primary key,
+    consumer_id        integer references consumer (id),
+    room_id        integer references room (id),
+    establish_time date,
+    state          integer,
+    deal           float,
+    start_time     date,
+    end_time       datec
+);
+create table comment
+(
+    id             serial primary key,
+    consumer_id        integer references consumer (id),
+    room_id        integer references room (id),
+    score          integer,
+    establish_time date,
+    like_num       integer
+);
+create table message
+(
+    id             serial primary key,
+    consumer_id        integer references consumer (id),
+    sender         varchar,
+    establish_time date,
+    content        text
+);
+create table activity
+(
+    id          serial primary key,
+    start_time  date,
+    finish_time date,
+    discount    float,
+    type_id     integer references type (id)
+);
+create table favorite
+(
+    consumer_id integer references consumer (id),
+    room_id integer references room (id)
+);
+create table gift
+(
+    id      serial primary key,
+    content varchar,
+    consumer_id integer references consumer (id)
+)
